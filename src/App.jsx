@@ -76,7 +76,7 @@ function App() {
             />
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <button className="p-2 rounded-lg hover:bg-white/10 transition-colors text-gray-400 hover:text-white">
             <svg
               className="w-5 h-5"
@@ -92,7 +92,7 @@ function App() {
               />
             </svg>
           </button>
-        </div>
+        </div> */}
       </header>
 
       {/* Messages Area */}
@@ -224,19 +224,7 @@ function App() {
                 disabled={!isReady || !input.trim()}
                 className="absolute right-3 bottom-3 p-1.5 rounded-lg bg-[#10a37f] text-white hover:bg-[#0d8c6d] disabled:bg-transparent disabled:text-gray-600 transition-all"
               >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 12h14M12 5l7 7-7 7"
-                  />
-                </svg>
+                Send
               </button>
             </div>
             <p className="text-center text-xs text-gray-500 mt-2">
