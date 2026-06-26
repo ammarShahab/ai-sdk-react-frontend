@@ -1,6 +1,6 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useLayoutEffect } from "react";
 import {
   getConversations,
   getConversation,
@@ -36,6 +36,7 @@ function ChatSession({ conversationId, onTitleUpdate }) {
   const [input, setInput] = useState("");
   const [loaded, setLoaded] = useState(false);
   const chatEndRef = useRef(null);
+  const scrollContainerRef = useRef(null);
   const inputRef = useRef(null);
   const textareaRef = useRef(null);
   const isLoading = status === "submitted" || status === "streaming";
@@ -115,9 +116,12 @@ function ChatSession({ conversationId, onTitleUpdate }) {
     adjustHeight();
   }, [input, adjustHeight]);
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, status]);
+  /* ---- Stable auto-scroll: runs before paint, instant scroll ---- */
+  useLayoutEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+  }, [messages]);
 
   useEffect(() => {
     if (isReady) inputRef.current?.focus();
@@ -156,7 +160,10 @@ function ChatSession({ conversationId, onTitleUpdate }) {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-4 custom-scroll">
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-4 custom-scroll"
+      >
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-6 text-gray-400 text-center">
             <div className="text-6xl opacity-30">
