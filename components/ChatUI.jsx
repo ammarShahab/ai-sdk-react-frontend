@@ -41,20 +41,16 @@ function ChatSession({ conversationId, onTitleUpdate }) {
   const isLoading = status === "submitted" || status === "streaming";
   const isReady = !isLoading;
 
-  const setMessagesRef = useRef(setMessages);
-  setMessagesRef.current = setMessages;
-
   const skipNextSave = useRef(false);
 
   /* ---- Load messages from MongoDB on mount / tab switch ---- */
   useEffect(() => {
     let cancelled = false;
-    setLoaded(false);
     getConversation(conversationId)
       .then((conv) => {
         if (!cancelled) {
           skipNextSave.current = true;
-          setMessagesRef.current(conv.messages || []);
+          setMessages(conv.messages || []);
           setLoaded(true);
         }
       })
@@ -62,14 +58,14 @@ function ChatSession({ conversationId, onTitleUpdate }) {
         if (!cancelled) {
           console.error("Failed to load messages:", err);
           skipNextSave.current = true;
-          setMessagesRef.current([]);
+          setMessages([]);
           setLoaded(true);
         }
       });
     return () => {
       cancelled = true;
     };
-  }, [conversationId]);
+  }, [conversationId, setMessages]);
 
   /* ---- Keep a ref to latest messages for unmount save ---- */
   const messagesRef = useRef(messages);
